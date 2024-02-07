@@ -18,23 +18,23 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.10.14",
-    "@theia/core": "1.43.1",
-    "@theia/editor": "1.43.1",
-    "@theia/filesystem": "1.43.1",
-    "@theia/getting-started": "1.43.1",
-    "@theia/keymaps": "1.43.1",
-    "@theia/markers": "1.43.1",
-    "@theia/messages": "1.43.1",
-    "@theia/monaco": "1.43.1",
-    "@theia/navigator": "1.43.1",
-    "@theia/preferences": "1.43.1",
-    "@theia/process": "1.43.1",
-    "@theia/terminal": "1.43.1",
-    "@theia/workspace": "1.43.1",
-    "theia-traceviewer": "0.2.0-next.20231206220005.ff0943f.0"
+    "@theia/core": "1.45.1",
+    "@theia/editor": "1.45.1",
+    "@theia/filesystem": "1.45.1",
+    "@theia/getting-started": "1.45.1",
+    "@theia/keymaps": "1.45.1",
+    "@theia/markers": "1.45.1",
+    "@theia/messages": "1.45.1",
+    "@theia/monaco": "1.45.1",
+    "@theia/navigator": "1.45.1",
+    "@theia/preferences": "1.45.1",
+    "@theia/process": "1.45.1",
+    "@theia/terminal": "1.45.1",
+    "@theia/workspace": "1.45.1",
+    "theia-traceviewer": "0.2.0-next.20240229144356.c22cb2c.0"
   },
   "devDependencies": {
-    "@theia/cli": "1.43.1"
+    "@theia/cli": "1.45.1"
   },
   "scripts": {
     "prepare": "theia build",
@@ -42,7 +42,10 @@
     "watch": "theia build --watch"
   },
   "engines": {
-    "yarn": "1.0.x || >=1.2.1",
-    "node": ">=12.14.1 <17"
+    "yarn": ">=1.7.0 <2",
+    "node": ">=16 <19"
+  },
+  "resolutions": {
+    "msgpackr": "^1.10.1"
   }
 }
