@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "docker-examples",
+  "version": "0.1.0",
+  "dependencies": {
+
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "prepare": "yarn tave",
+    "build": "yarn tate build && yarn tave build",
+    "build:prod": "yarn tate build:prod && yarn tave build:prod",
+    "tate": "yarn --cwd theia-app-theia-ext",
+    "tave": "yarn --cwd theia-app-vscode-ext",
+    "build:docker": "yarn build:docker:tate && yarn build:docker:tave",
+    "build:docker:tate": "docker build  --no-cache --network=host . --build-arg RESOURCES=theia-app-theia-ext -t tv-tate -f Dockerfile-tate",
+    "build:docker:tave": "docker build  --no-cache --network=host . --build-arg RESOURCES=theia-app-vscode-ext -t tv-tave -f Dockerfile-tave",
+    "run:docker:tate": "docker run --rm --name tv-tate-1 --network host tv-tate",
+    "run:docker:tave": "docker run --rm --name tv-tave-1 --network host tv-tave"
+  },
+  "engines": {
+  },
+  "resolutions": {
+    "msgpackr": "^1.10.1",
+    "**/nan": "2.18.0"
+  },
+  "workspaces":[
+    "theia-app-theia-ext",
+    "theia-app-vscode-ext"
+  ]
+}

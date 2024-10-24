@@ -1,4 +1,5 @@
-FROM node:18.19.1-bookworm-slim as build
+FROM node:18.20.4-bookworm-slim AS build
+ARG RESOURCES
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -11,33 +12,34 @@ RUN apt-get update && apt-get install -y \
     libxkbfile-dev
 
 # Build the browser trace-extension application
-COPY example-package.json /app/tte/package.json
-COPY webpack.config.js /app/tte/webpack.config.js
-WORKDIR /app/tte/
+COPY ${RESOURCES}/package.json /app/tv/
+COPY ${RESOURCES}/webpack.config.js /app/tv/
+COPY yarn.lock  /app/tv/
+WORKDIR /app/tv/
 RUN yarn && \
     yarn run download:plugins && \
-    npx theia build --app-target=\"browser\" --mode production && \
+    yarn build:prod && \
     yarn autoclean --init && \
     echo *.ts >> .yarnclean && \
     echo *.ts.map >> .yarnclean && \
     echo *.spec.* >> .yarnclean && \
     echo "!@theia/test" >> .yarnclean && \
     yarn --production && \
-    yarn cache clean && \
-    du -hs /app/tte
+    yarn cache clean
 
 FROM node:18.19.1-bookworm-slim
+ARG RESOURCES
 
-COPY --from=build /app/tte /app/tte
+COPY --from=build /app/tv /app/tv
 
 RUN apt-get update && apt-get install -y \
     libx11-6 \
     libxkbfile1 \
     libsecret-1-0 \
     && rm -rf /var/lib/apt/lists/*
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
-WORKDIR /app/tte
-COPY docker-entrypoint.sh /usr/local/bin
+WORKDIR /app/tv
+COPY ${RESOURCES}/docker-entrypoint.sh /usr/local/bin
 EXPOSE 4000
 ENTRYPOINT ["docker-entrypoint.sh"]

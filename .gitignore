@@ -1,0 +1,6 @@
+docker/*/gen-webpack.*
+docker/*/lib
+docker/*/src-gen
+node_modules/
+docker/*/plugins
+
