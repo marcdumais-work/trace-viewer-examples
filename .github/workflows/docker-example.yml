@@ -1,0 +1,55 @@
+name: docker-example
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build-and-test:
+    name: Build and test docker-example
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18]
+        params:
+          - name: "theia-ext"
+            folder: "theia-extension"
+          - name: "vscode-ext"
+            folder: "vscode-extension"
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build example app
+      uses: nick-invision/retry@v3
+      with:
+        timeout_minutes: 10
+        retry_wait_seconds: 15
+        max_attempts: 1
+        retry_on: error
+        command: |
+          cd docker
+          docker build . --build-arg APP_SUBFOLDER=${{ matrix.params.folder }} -t tte-${{ matrix.params.name }} -f ${{ matrix.params.folder }}/Dockerfile 
+        on_retry_command: cd ../..
+
+    - name: Run docker image
+      run: |
+        docker run --init -d -p 0.0.0.0:3000:4000 tte-${{ matrix.params.name }}
+
+    - name: Test trace viewer appliance
+      run: |
+        yarn --ignore-scripts
+        cd docker
+        yarn --cwd ${{ matrix.params.folder }} test
+
