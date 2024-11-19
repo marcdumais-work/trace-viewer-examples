@@ -1,0 +1,36 @@
+# How to use: pass as an "app" build argument, the name of the base 
+# trace-viewer image to extend. e.g.:
+#   $ docker build --build-arg app=tv-tate --network=host . --build-arg RESOURCES=theia-app-demo -t tv-tate-demo -f Dockerfile-demo
+#
+# Layout of the resulting demo image:
+#
+# trace viewer application (unchanged): /app/tv
+# Trace Server folder: /app/trace-compass-server
+# Trace server executable: /app/trace-compass-server/tracecompass-server
+# Tutorial traces folder: : /workspaces/TraceCompassTutorialTraces/
+# Default workspace: /workspaces/TraceCompassTutorialTraces/
+
+ARG app
+
+FROM ${app}
+ARG RESOURCES
+
+# needed by the trace server
+RUN apt-get update && apt-get install -y \
+    openjdk-17-jdk \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspaces
+# contains scripts entries to download trace server and sample traces
+COPY package.json /workspaces
+RUN yarn download:sample-traces
+RUN yarn download:server && mv trace-compass-server /app/
+# not needed anymore
+RUN rm package.json 
+
+COPY ${RESOURCES}/docker-entrypoint-w-server.sh /usr/local/bin
+WORKDIR /app/tv
+
+EXPOSE 4000
+ENTRYPOINT ["docker-entrypoint-w-server.sh"]
