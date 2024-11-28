@@ -42,6 +42,6 @@
   },
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
-      "vscode-trace-extension": "https://open-vsx.org/api/eclipse-cdt/vscode-trace-extension/0.2.6/file/eclipse-cdt.vscode-trace-extension-0.2.6.vsix"
+      "vscode-trace-extension": "https://open-vsx.org/api/eclipse-cdt/vscode-trace-extension/0.2.9/file/eclipse-cdt.vscode-trace-extension-0.2.9.vsix"
   }
 }
