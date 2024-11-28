@@ -1,4 +1,4 @@
-name: docker-example
+name: docker-examples
 
 on:
   push:
@@ -9,19 +9,19 @@ on:
 jobs:
 
   build-and-test:
-    name: Build and test docker-example
+    name: build and test images
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        node-version: [18]
         params:
           - name: "tate"
             resources-folder: "theia-app-theia-ext"
           - name: "tave"
             resources-folder: "theia-app-vscode-ext"
+        os: [ubuntu-latest]
+        node-version: [18]
 
     steps:
     - uses: actions/checkout@v4
@@ -31,7 +31,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Build example app
+    - name: Install npm dependencies
+      run: |
+        cd docker
+        yarn --ignore-scripts
+
+    - name: Build trace viewer image (base version)
       uses: nick-invision/retry@v3
       with:
         timeout_minutes: 10
@@ -40,16 +45,38 @@ jobs:
         retry_on: error
         command: |
           cd docker
-          docker build . --build-arg RESOURCES=${{ matrix.params.resources-folder }} -t tv-${{ matrix.params.name }} -f Dockerfile-${{ matrix.params.name }} 
-        on_retry_command: cd ../..
+          yarn build:docker:${{ matrix.params.name }}
+        on_retry_command: cd ..
 
-    - name: Run docker image
+    - name: Run trace viewer image (base version)
       run: |
-        docker run --init -d -p 0.0.0.0:3000:4000 tv-${{ matrix.params.name }}
+        cd docker
+        docker run --init -d -p 0.0.0.0:3000:4000 --name tv-${{ matrix.params.name }}-1 tv-${{ matrix.params.name }}
 
-    - name: Test trace viewer appliance
+    - name: Test trace viewer (base version)
       run: |
-        yarn --ignore-scripts
         cd docker
         yarn --cwd ${{ matrix.params.resources-folder }} test
+        docker kill tv-${{ matrix.params.name }}-1
 
+    - name: Build trace viewer image (demo version)
+      uses: nick-invision/retry@v3
+      with:
+        timeout_minutes: 10
+        retry_wait_seconds: 15
+        max_attempts: 1
+        retry_on: error
+        command: |
+          cd docker
+          yarn build:docker:${{ matrix.params.name }}-demo
+        on_retry_command: cd ..
+
+    - name: Run trace viewer image (demo version)
+      run: |
+        docker run --init -d -p 0.0.0.0:3000:4000 --name tv-${{ matrix.params.name }}-demo-1 tv-${{ matrix.params.name }}-demo
+        
+    - name: Test trace viewer (demo version)
+      run: |
+        cd docker
+        yarn --cwd ${{ matrix.params.resources-folder }} test-demo
+        docker kill tv-${{ matrix.params.name }}-demo-1

@@ -34,7 +34,8 @@
     "start": "theia start --plugins=local-dir:plugins",
     "watch": "theia build --watch",
     "download:plugins": "theia download:plugins --rate-limit=15 --parallel=false --ignore-errors",
-    "test": "echo \"TODO: Add tests\" && /bin/true"
+    "test": "echo \"TODO: Add tests\" && /bin/true",
+    "test-demo": "echo \"TODO: Add tests\" && /bin/true"
   },
   "engines": {
     "yarn": ">=1.7.0 <2",
