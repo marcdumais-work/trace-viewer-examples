@@ -15,9 +15,16 @@
     "tave": "yarn --cwd theia-app-vscode-ext",
     "build:docker": "yarn build:docker:tate && yarn build:docker:tave",
     "build:docker:tate": "docker build  --no-cache --network=host . --build-arg RESOURCES=theia-app-theia-ext -t tv-tate -f Dockerfile-tate",
+    "build:docker:tate-demo": "docker build --build-arg app=tv-tate --no-cache --network=host . --build-arg RESOURCES=theia-app-demo -t tv-tate-demo -f Dockerfile-demo",
+    "build:docker:tave-demo": "docker build --build-arg app=tv-tave --no-cache --network=host . --build-arg RESOURCES=theia-app-demo -t tv-tave-demo -f Dockerfile-demo",
     "build:docker:tave": "docker build  --no-cache --network=host . --build-arg RESOURCES=theia-app-vscode-ext -t tv-tave -f Dockerfile-tave",
     "run:docker:tate": "docker run --rm --name tv-tate-1 --network host tv-tate",
-    "run:docker:tave": "docker run --rm --name tv-tave-1 --network host tv-tave"
+    "run:docker:tate-demo": "docker run --rm --name tv-tate-demo-1 tv-tate-demo",
+    "run:docker:tave": "docker run --rm --name tv-tave-1 --network host tv-tave",
+    "run:docker:tave-demo": "docker run --network host --rm --name tv-tave-demo-1 tv-tave-demo",
+    "download:sample-traces": "curl -o TraceCompassTutorialTraces.tgz https://raw.githubusercontent.com/tuxology/tracevizlab/master/labs/TraceCompassTutorialTraces.tgz; tar -xf TraceCompassTutorialTraces.tgz; rm TraceCompassTutorialTraces.tgz",
+    "download:server": "curl -o trace-compass-server.tar.gz https://download.eclipse.org/tracecompass.incubator/trace-server/rcp/trace-compass-server-latest-linux.gtk.x86_64.tar.gz; tar -xf trace-compass-server.tar.gz; rm trace-compass-server.tar.gz",
+    "start:server": "./trace-compass-server/tracecompass-server"
   },
   "engines": {
   },

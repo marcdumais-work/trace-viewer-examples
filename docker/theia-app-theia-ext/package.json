@@ -32,7 +32,8 @@
     "start": "theia start",
     "watch": "theia build --watch",
     "clean": "echo 'Docker: Fake clean!!!'",
-    "test": "yarn --cwd ../../playwright-tests ui-tests"
+    "test": "yarn --cwd ../../playwright-tests ui-tests",
+    "test-demo": "echo \"TODO: Add tests\" && /bin/true"
   },
   "engines": {
     "yarn": ">=1.7.0 <2",

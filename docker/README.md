@@ -6,10 +6,12 @@ Each application has a `DockerFile` in this folder and its resources in a sub-fo
 
 - `DockerFile-tate, resources folder: theia-app-theia-ext/`: Dockerfile and resourced needed to build a Trace Viewer Appliance, using a Theia application that includes the _Theia Trace Viewer_ _(Theia) extension_, installed [from npm][npm package].
 - `DockerFile-tave, resources folder: theia-app-vscode-ext/`: Dockerfile and resources needed to build a Trace Viewer Appliance, using a Theia application that includes the _Trace Viewer for VSCode_ _(vsix) extension_, installed [from the open vsx public registry][vsix package]
+- `Dockerfile-demo, resources folder: theia-app-demo/`: Dockerfile that extends one of the Theia-based docker image (tate, tave) and makes it "demo-ready" by adding the Eclipse Trace Compass trace server, a set of sample traces and configuring the traces folder as the starting workspace. See corresponding [README](theia-app-demo/README.md) for more details.
 
 Note:
 
-- the images will contain exclusively the trace viewer front-end. If you want to run a complete _trace viewer_ application, you will need a service running the trace-server (not included here)
+- the `-demo` images are meant to be "up-and-running" quickly and contain a trace server and some Tutorial traces. For some quick tests or a demo, this is perfect, but maybe not suitable for general use, where you probably want to view your own traces.
+- the other images contain exclusively the trace viewer front-end. If you want to run a complete _trace viewer_ application, you will need a service running the trace-server (not included here)
 - see section "Docker tips and tricks" if you are relatively new to Docker and want to learn about some potential alternatives or refinements about some of the commands in this document.
 
 ## Quickly Build/Run the example Docker images
@@ -126,7 +128,7 @@ $ yarn && yarn build
 $ yarn && yarn build:prod
 ```
 
-If after the build, it turns-out that `yarn.lock` has been modified, the new version needs to be upstreamed as part of the PR that changed the Theia application.
+If after the build, it turns-out that `yarn.lock` has been modified, the new version needs to be upstreamed as part of the PR that changed the Theia application, so that the applications built as part of the images will use the same dependencies/versions.
 
 ## Docker tips and tricks
 
